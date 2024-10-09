@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { ViewQuestion } from '../common/Search';
-
+import Image from 'next/image';
 
 interface ViewPepperProps {
   question: ViewQuestion; // Accept the selected question
@@ -113,7 +113,7 @@ const ViewPepper: React.FC<ViewPepperProps> = ({ question, onClose }) => {
          transition: 'transform 0.1s ease',
        }}
       >
-        <img
+        <Image
           id="currentImage"
           src={question?.url[currentIndex]}
           alt={`Slide ${currentIndex + 1}`}
