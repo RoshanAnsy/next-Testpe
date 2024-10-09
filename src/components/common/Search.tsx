@@ -75,7 +75,7 @@ export const Search = () => {
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
    
-    const url: string = "http://localhost:3000/";
+    const url: string = `${process.env.NEXT_PUBLIC_API_URL}/`;
     const result = await axios.post(url, data);
     set_data(result.data);
     // After form submission, scroll to the top
@@ -89,7 +89,7 @@ export const Search = () => {
   }, []);
 
   const handleCardClick = async (value: number) => {
-    const result = await axios.get(`http://localhost:3000/viewpepper?pepperId=${value}`);
+    const result = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/viewpepper?pepperId=${value}`);
     console.log("after the click on card", result);
     setSelectedQuestion(result.data);
     setIsModalOpen(true);

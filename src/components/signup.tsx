@@ -29,7 +29,7 @@ export default function SignIn() {
   const router=useRouter();
   
   const onSubmit: SubmitHandler<Inputs> = async(data) => {
-    const result=await axios.post("http://localhost:3000/signup",data);
+    const result=await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/signup`,data);
     console.log(result);
     if(result) router.push('/login')
   };

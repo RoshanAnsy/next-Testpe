@@ -30,7 +30,7 @@ export default function SignIn() {
   } = useForm<Inputs>();
  
   const onSubmit: SubmitHandler<Inputs> = async(data) => {
-    const result=await axios.post("http://localhost:3000/login",data);
+    const result=await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/login`,data);
     console.log(result,"result after login");
     localStorage.setItem("token",result.data.token);
     console.log(data);

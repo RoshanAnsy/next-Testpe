@@ -53,7 +53,7 @@ export default function UploadPepper() {
 
       console.log("FormData:", formData);
 
-      const result = await axios.post("http://localhost:3000/prev", formData, {
+      const result = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/prev`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

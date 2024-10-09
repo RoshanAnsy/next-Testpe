@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
-import { useTheme } from "next-themes";
+// import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -11,7 +11,7 @@ import { Moon, User, Menu } from "lucide-react";
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login state
-  const { setTheme } = useTheme();
+  // const { setTheme } = useTheme();
   const pathname = usePathname();
 
   // Mock user authentication check
