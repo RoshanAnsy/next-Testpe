@@ -28,17 +28,19 @@ export default function SignIn() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<Inputs>();
  
   const onSubmit: SubmitHandler<Inputs> = async(data) => {
     setIsLoading(true);
-    const result=await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/login`,data);
-    console.log(result,"result after login");
+    const result=await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`,data);
     localStorage.setItem("token",result.data.token);
-    console.log(data);
     toast({title:"login successfully"})
+    setIsLoading(false);
+    reset();
      if (result) router.push("/")
+
   };
 
   return (

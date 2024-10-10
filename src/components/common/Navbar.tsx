@@ -6,12 +6,20 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Button } from "../ui/button";
-import { Moon, User, Menu } from "lucide-react";
+import {  User, Menu } from "lucide-react";
+import { useTheme } from "next-themes"
 
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login state
-  // const { setTheme } = useTheme();
+  
   const pathname = usePathname();
 
   // Mock user authentication check
@@ -51,11 +59,7 @@ export default function Navbar() {
         {/* Icons for larger screens */}
         <div className="hidden lg:flex items-center space-x-4">
           <div>
-            <Button variant="outline" size="icon">
-              <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              <span className="sr-only">Toggle theme</span>
-            </Button>
+            <DarkToggleButton/>
           </div>
 
           {isLoggedIn ? (
@@ -82,16 +86,14 @@ export default function Navbar() {
             Home
           </a>
           <div className="flex justify-start space-x-4 mt-4">
-            <Button variant="ghost" size="icon">
-              <Moon className="h-5 w-5 text-gray-700" />
-              <span className="sr-only">Toggle dark mode</span>
-            </Button>
+          <DarkToggleButton/>
 
             {isLoggedIn ? (
+              <Link href="/profile">
               <Button variant="ghost" size="icon" className="rounded-full">
                 <User className="h-5 w-5 text-gray-700" />
                 <span className="sr-only">User profile</span>
-              </Button>
+              </Button></Link>
             ) : (
               <Link href="/login">
                 <Button variant="ghost">Login</Button>
@@ -110,4 +112,31 @@ export default function Navbar() {
       )}
     </nav>
   );
+}
+
+
+export const DarkToggleButton:React.FC=()=>{
+  const { setTheme } = useTheme();
+  return (
+    <DropdownMenu>
+    <DropdownMenuTrigger asChild>
+      <Button variant="outline" size="icon">
+        <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+        <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+        <span className="sr-only">Toggle theme</span>
+      </Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent align="end">
+      <DropdownMenuItem onClick={() => setTheme("light")}>
+        Light
+      </DropdownMenuItem>
+      <DropdownMenuItem onClick={() => setTheme("dark")}>
+        Dark
+      </DropdownMenuItem>
+      <DropdownMenuItem onClick={() => setTheme("system")}>
+        System
+      </DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
+  )
 }

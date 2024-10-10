@@ -25,15 +25,16 @@ export default function SignIn() {
   const {
     register,
     handleSubmit,
-    
+    reset,
     formState: { errors },
   } = useForm<Inputs>();
   const router=useRouter();
   
   const onSubmit: SubmitHandler<Inputs> = async(data) => {
     setIsLoading(true);
-    const result=await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/signup`,data);
-    console.log(result);
+    const result=await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`,data);
+    setIsLoading(false);
+    reset();
     if(result) router.push('/login')
   };
 
