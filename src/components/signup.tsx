@@ -13,6 +13,7 @@ import axios from "axios";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 type Inputs = {
   email: string;
   password: string;
@@ -20,6 +21,7 @@ type Inputs = {
 };
 
 export default function SignIn() {
+  const [isLoading,setIsLoading]=useState(false);
   const {
     register,
     handleSubmit,
@@ -29,6 +31,7 @@ export default function SignIn() {
   const router=useRouter();
   
   const onSubmit: SubmitHandler<Inputs> = async(data) => {
+    setIsLoading(true);
     const result=await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/signup`,data);
     console.log(result);
     if(result) router.push('/login')
@@ -70,6 +73,7 @@ export default function SignIn() {
               </label>
               <input
                 id="password"
+                type="password"
                 className="w-full mt-1 p-2 border border-gray-300 rounded-md"
                 {...register("password", { required: true })}
               />
@@ -86,6 +90,7 @@ export default function SignIn() {
               </label>
               <input
                 id="password"
+                type="password"
                 className="w-full mt-1 p-2 border border-gray-300 rounded-md"
                 {...register("conformPassword", { required: true })}
               />
@@ -98,7 +103,7 @@ export default function SignIn() {
               type="submit"
               className="w-full py-2 rounded-md cursor-pointer"
               value="Submit"
-            > submit</Button>
+            > {isLoading? "Loading...":"sign up"}</Button>
           </form>
         </CardContent>
         

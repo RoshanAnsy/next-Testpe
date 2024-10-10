@@ -15,6 +15,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
 type Inputs = {
   email: string;
   password: string;
@@ -23,6 +24,7 @@ type Inputs = {
 export default function SignIn() {
   const router=useRouter();
   const {toast}=useToast();
+  const[isLoading,setIsLoading]=useState(false);
   const {
     register,
     handleSubmit,
@@ -30,6 +32,7 @@ export default function SignIn() {
   } = useForm<Inputs>();
  
   const onSubmit: SubmitHandler<Inputs> = async(data) => {
+    setIsLoading(true);
     const result=await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/login`,data);
     console.log(result,"result after login");
     localStorage.setItem("token",result.data.token);
@@ -74,6 +77,7 @@ export default function SignIn() {
               </label>
               <input
                 id="password"
+                type="password"
                 className="w-full mt-1 p-2 border border-gray-300 rounded-md"
                 {...register("password", { required: true })}
               />
@@ -86,7 +90,7 @@ export default function SignIn() {
               type="submit"
               className="w-full py-2 rounded-md cursor-pointer"
               value="Submit"
-            > submit</Button>
+            > {isLoading? "Loading...":"Log In"}</Button>
           </form>
         </CardContent>
         
@@ -94,7 +98,7 @@ export default function SignIn() {
           <hr className="w-full border-gray-300" />
           <div className="flex items-center gap-2">
               <p className="text-blue-500 text-xs">do not have account</p>
-              <Link href={"/signup"}>signup</Link>
+              <Link href={"/signup"}  >signup</Link>
           </div>
         </CardFooter>
       </Card>

@@ -6,87 +6,35 @@ import { Button } from "../ui/button";
 import QuestionCard from "./QuestionCard";
 import { Inputs } from "@/type/types";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ComboboxDemo } from "../ui/ComboboxDemo";
 import ViewPepper from "../pepper/viewPepper";
 import { useToast } from "@/hooks/use-toast";
+import { yearData,universityData,semesterData } from "../data/catched";
+import { ViewQuestion } from "@/type/types";
+import { QuestionData } from "@/type/types";
+import { staticData } from "../data/catched";
 
-
-export const universityData = [
-  { value: "beu", label: "BEU" },
-  { value: "aku", label: "AKU" },
-  { value: "cbse", label: "CBSE" },
-];
-
-export const yearData = [
-  { value: "2021", label: "2021" },
-  { value: "2022", label: "2022" },
-  { value: "2023", label: "2023" },
-  { value: "2024", label: "2024" },
-];
-
-export const semesterData = [
-  { value: "1", label: "1" },
-  { value: "2", label: "2" },
-  { value: "3", label: "3" },
-  { value: "4", label: "4" },
-  { value: "5", label: "5" },
-  { value: "6", label: "6" },
-  { value: "7", label: "7" },
-  { value: "8", label: "8" },
-];
-
-const staticData: QuestionData[] = [
-  { heading: "4-th sem", description: "this is just random data", year: "2023", id: 1 },
-  { heading: "4-th sem", description: "this is just random data", year: "2023", id: 2 },
-  { heading: "4-th sem", description: "this is just random data", year: "2023", id: 3 },
-  { heading: "4-th sem", description: "this is just random data", year: "2023", id: 4 },
-];
-
-export interface QuestionData {
-  heading: string;
-  description: string;
-  year: string;
-  id: number;
-  
-}
-
-export interface ViewQuestion {
-  bord: string;
-  branch: string;
-  year: string;
-  semester: string;
-  subject: string;
-  url: string[];
-}
 
 export const Search = () => {
   const [question_data, set_data] = useState<QuestionData[]>(staticData);
   const [selectedQuestion, setSelectedQuestion] = useState<ViewQuestion | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {toast}=useToast();
-  const Get_data = async () => {
-    // Uncomment and implement when ready
-    // const result = await axios.get("http://localhost:3000/");
-    // set_data(result.data); 
-  };
-
+  const[isLoading,setIsLoading]=useState(false)
   const { register, handleSubmit, setValue, formState: { errors } } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-   
+    setIsLoading(true);
     const url: string = `${process.env.NEXT_PUBLIC_API_URL}/`;
     const result = await axios.post(url, data);
     set_data(result.data);
-    // After form submission, scroll to the top
     window.scrollTo({ top: 300, behavior: 'smooth' });
-    toast({title:"you search is matched"})
-    console.log("backend Data:", result);
+    toast({title:`${result?.data.length>0 ? "you search is matched" : "Related to your search nothing found"}`})
+    setIsLoading(false);
   };
 
-  useEffect(() => {
-    Get_data();
-  }, []);
+ 
 
   const handleCardClick = async (value: number) => {
     const result = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/viewpepper?pepperId=${value}`);
@@ -135,7 +83,7 @@ export const Search = () => {
             {errors.subject && (
               <span className="text-red-500">This field is required</span>
             )}
-            <Button type="submit"  className="w-full lg:w-auto">Search</Button>
+            <Button type="submit"  className="w-full lg:w-auto">{isLoading? "searching...":"search"}</Button>
           </div>
         </form>
       </div>

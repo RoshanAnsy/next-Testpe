@@ -5,26 +5,43 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"; 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  // AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { ComboboxDemo } from "./ui/ComboboxDemo";
-import { yearData, universityData, semesterData } from "./common/Search";
+import { yearData,universityData, semesterData  } from "./data/catched";
 import { Inputs } from "@/type/types";
 import { Textarea } from "./ui/textarea";
 import { DropZone } from "./ui/dropzone";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+// import { useRouter } from "next/navigation"; // Next.js 13+ for client-side navigation
 
 export default function UploadPepper() {
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors },
   } = useForm<Inputs>();
   const { toast } = useToast();
+  // const router = useRouter(); // For showing loading
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false); // For managing dialog state
+  const [isLoading, setIsLoading] = useState(false); // Loading state
 
   // Receive files from DropZone
   const handleFileChange = (files: File[]) => {
@@ -34,6 +51,7 @@ export default function UploadPepper() {
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
+      setIsLoading(true); // Show loading
       console.log("before the form data", data);
       const formData = new FormData();
       const token = localStorage.getItem("token");
@@ -51,31 +69,33 @@ export default function UploadPepper() {
         formData.append(`files`, file);
       });
 
-      console.log("FormData:", formData);
-
-      const result = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/prev`, formData, {
+      // Upload API call
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/prev`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-        withCredentials: true
+        withCredentials: true,
       });
 
-      toast({ title: "Pepper upload successfully" });
-      console.log(result, "File upload result");
+      toast({ title: "Pepper uploaded successfully" });
+      reset({files:null,subject:'',semester:'',branch:'',year:'',bord:'',heading:'',description:''}); // Reset form
+      setIsDialogOpen(false); // Close the dialog
     } catch (error) {
       console.error("Error during file upload:", error);
+    } finally {
+      setIsLoading(false); // Hide loading state
     }
   };
 
   return (
-    <Card className="w-full p-6 rounded-lg">
+    <Card className="w-full p-6 rounded-lg shadow-none ">
       <CardHeader className="text-center">
         <CardTitle className="text-2xl font-bold text-black">
           Upload Question <span className="text-blue-500">Pepper</span>
         </CardTitle>
       </CardHeader>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={handleSubmit(() => setIsDialogOpen(true))} className="space-y-6">
         {/* Subject and Branch */}
         <div className="flex flex-col md:flex-row gap-4">
           <div className="w-full">
@@ -157,6 +177,24 @@ export default function UploadPepper() {
           Submit
         </Button>
       </form>
+
+      {/* Alert Dialog for Confirmation */}
+      <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure you want to upload?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action will upload the selected files. It cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleSubmit(onSubmit)}>
+              {isLoading ? "Loading..." : "Confirm"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 }

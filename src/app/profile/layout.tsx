@@ -9,13 +9,26 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { BsBoxArrowInRight } from "react-icons/bs";
 import { IoToggleOutline } from "react-icons/io5"; // Mobile menu button icon
+import { useRouter } from "next/navigation";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const DashboardLayout = ({ children }: { children: ReactNode }) => {
   const { toast } = useToast();
   const [sidebarOpen, setSidebarOpen] = useState(false); // State to toggle sidebar
-
+  const router=useRouter();
   const handleLogout = () => {
     localStorage.removeItem("token");
+    router.push("/")
     toast({ title: "You logged out successfully" });
   };
 
@@ -60,19 +73,42 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
             <nav>
               <ul>
                 <li className="mb-4">
-                  <Link href="/profile" onClick={handleLinkClick} className="flex gap-2 justify-center items-center">
+                  <Link href="/profile" onClick={handleLinkClick} className="flex gap-2 justify-center items-center hover:shadow-sm rounded-md p-1 hover:bg-neutral-300">
                     <span><SlPeople /></span> Profile
                   </Link>
                 </li>
                 <li className="mb-4">
-                  <Link href="/profile/upload" onClick={handleLinkClick} className="flex gap-2 justify-center items-center">
+                  <Link href="/profile/upload" onClick={handleLinkClick} className="flex gap-2 justify-center items-center hover:shadow-sm rounded-md p-1 hover:bg-neutral-300">
                     <span><PiUploadSimple /></span> Upload
                   </Link>
                 </li>
                 <li className="mb-4">
-                  <Link href="/" onClick={() => { handleLogout(); handleLinkClick(); }} className="flex gap-2 justify-center items-center">
-                    <span><BsBoxArrowInRight /></span> Logout
-                  </Link>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <button className="flex gap-2 justify-center items-center w-full hover:shadow-sm hover:bg-neutral-300 p-1 rounded-sm">
+                        <span><BsBoxArrowInRight /></span> Logout
+                      </button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Are you sure you want to log out?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          You will be logged out of your account.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => {
+                            handleLogout();
+                            handleLinkClick(); // Close sidebar on mobile
+                          }}
+                        >
+                          Continue
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </li>
               </ul>
             </nav>
@@ -81,8 +117,8 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
       </aside>
 
       {/* Main Content */}
-      <Card className="w-full p-6 rounded-lg shadow-md">
-        <main className="flex-1 p-6 bg-gray-100">{children}</main>
+      <Card className="w-full p-6 rounded-lg ">
+        <main className=" p-6 ">{children}</main>
       </Card>
 
       {/* Overlay for mobile sidebar */}

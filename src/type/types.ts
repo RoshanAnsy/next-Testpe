@@ -12,3 +12,21 @@ export type Inputs = {
     files?:File | null;
 
   };
+
+
+  export interface QuestionData {
+    heading: string;
+    description: string;
+    year: string;
+    id: number;
+    
+  }
+  
+  export interface ViewQuestion {
+    bord: string;
+    branch: string;
+    year: string;
+    semester: string;
+    subject: string;
+    url: string[];
+  }

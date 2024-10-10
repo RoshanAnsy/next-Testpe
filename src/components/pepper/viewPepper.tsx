@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from 'react';
-import { ViewQuestion } from '../common/Search';
+import { ViewQuestion } from '@/type/types';
 import Image from 'next/image';
 
 interface ViewPepperProps {
@@ -115,11 +115,15 @@ const ViewPepper: React.FC<ViewPepperProps> = ({ question, onClose }) => {
       >
         <Image
           id="currentImage"
+          
           src={question?.url[currentIndex]}
           alt={`Slide ${currentIndex + 1}`}
           className={`max-w-full h-96 rounded-lg object-contain text-[10px] sm:text-sm font-time ${
             isFullScreen ? 'h-full' : 'border'
           } `}
+          layout="responsive"
+          width={16}  // aspect ratio width
+          height={9}  
         />
         {/* Previous Button */}
         <button

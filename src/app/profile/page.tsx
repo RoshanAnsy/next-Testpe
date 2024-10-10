@@ -3,7 +3,7 @@
 export default function ProfileService(){
     return(
         <div>
-            this is new profile
+            your profile updated soon. Currently, It is under development phase.
         </div>
     )
 }
