@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import Navbar from "@/components/common/Navbar";
 import Footer from "@/components/common/Footer";
@@ -38,7 +39,8 @@ export default function RootLayout({
             disableTransitionOnChange
           >
         <Navbar/>
-        {children}
+        <main>{children}</main>
+        <Analytics/>
         <Toaster/>
         <Footer/>
         </ThemeProvider>
