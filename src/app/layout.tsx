@@ -20,8 +20,33 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "TestPe",
-  description: "Testpe provide previous year questions pepper beu aku",
-  
+  description: "Testpe provide previous year questions pepper beu aku and other university ...",
+  keywords:['testpe','testpe.in','tp.in','testpe company','tp','beu exam pepper','beu university pepper'],
+  icons:"/favicon.ico",
+  category: ' Technology',
+  alternates: {
+    canonical: "https://testpe.in/",
+  },
+  openGraph:{
+    type:'website',
+    title:"testpe.in",
+    description:'Testpe is private company that provides previous year questions pepper of various university and collage.',
+    images:["https://res.cloudinary.com/dxgkczwho/image/upload/v1728748195/TP_1_robav7.png",
+            "https://res.cloudinary.com/dxgkczwho/image/upload/v1728748274/homedesign_zk91ey.png",
+            " https://res.cloudinary.com/dxgkczwho/image/upload/v1728748336/TP_pxi42w.png",
+    ],
+    url:"https://testpe.in/"
+  },
+  twitter:{
+    site: "testpe.in",
+    images: "https://res.cloudinary.com/dxgkczwho/image/upload/v1728748195/TP_1_robav7.png",
+    title: "Testpe.in",
+    description: "Testpe is private company that provides previous year questions pepper of various university and collage.",
+    card:"summary_large_image",
+    creator: "@testpe.in"
+    
+  },
+  metadataBase: new URL("https://testpe.in/"),
 };
 
 export default function RootLayout({
