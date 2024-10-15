@@ -4,23 +4,21 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"; 
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useForm, SubmitHandler } from "react-hook-form";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 type Inputs = {
-  email: string;
   password: string;
   conformPassword:string;
+  userId:number
 };
 
-export default function SignUp() {
+export default function ChangePassword() {
   const [isLoading,setIsLoading]=useState(false);
   const {
     register,
@@ -32,7 +30,10 @@ export default function SignUp() {
   
   const onSubmit: SubmitHandler<Inputs> = async(data) => {
     setIsLoading(true);
-    const result=await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`,data);
+    const id=localStorage.getItem("userId");
+    data.userId=Number(id);
+    const result=await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/passwordReset`,data);
+    localStorage.removeItem("userId");
     setIsLoading(false);
     reset();
     if(result) router.push('/auth/login')
@@ -54,23 +55,13 @@ export default function SignUp() {
           
           {/* Sign-in form */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div>
-              <label htmlFor="example" className="block text-sm text-gray-700">
-                 Email
-              </label>
-              <input
-                id="email"
-                className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-                {...register("email")}
-              />
-            </div>
 
             <div>
               <label
                 htmlFor="password"
                 className="block text-sm text-gray-700"
               >
-                Password
+                New Password
               </label>
               <input
                 id="password"
@@ -104,17 +95,11 @@ export default function SignUp() {
               type="submit"
               className="w-full py-2 rounded-md cursor-pointer"
               value="Submit"
-            > {isLoading? "Loading...":"sign up"}</Button>
+            > {isLoading? "Loading...":"submit"}</Button>
           </form>
         </CardContent>
         
-        <CardFooter className="flex flex-col items-center gap-2 mt-6">
-          <hr className="w-full border-gray-300" />
-          <div className="flex items-center gap-2">
-          <p className="text-blue-500 text-xs">I have all ready signup</p>
-          <Link href={"/auth/login"}>Login</Link>
-          </div>
-        </CardFooter>
+        
       </Card>
     </div>
   );
