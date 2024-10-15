@@ -8,8 +8,8 @@ import { useState, useEffect } from "react";
 import { Button } from "../ui/button";
 import {  User, Menu } from "lucide-react";
 import { useTheme } from "next-themes"
-
-
+import tp from "../../../public/assects/TP.png"
+import Image from "next/image";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,9 +41,9 @@ export default function Navbar() {
         {/* Logo */}
         <Link
           href="/"
-          className="font-bold text-2xl bg-gradient-to-b from-blue-400 to-blue-700 bg-clip-text text-transparent"
+          className="font-bold flex justify-center items-center gap-2 text-2xl bg-gradient-to-b from-blue-400 to-blue-700 bg-clip-text text-transparent"
         >
-          TESTPE
+         <Image src={tp} alt="testpe" height={30} width={30} className=" rounded-sm"/> TESTPE
         </Link>
 
         {/* Menu button for mobile */}
@@ -68,7 +68,7 @@ export default function Navbar() {
               <span className="sr-only">User profile</span>
             </Link>
           ) : (
-            <Link href="/login">
+            <Link href="/auth/login">
               <Button variant="secondary">Login</Button>
             </Link>
           )}

@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"; 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { Button } from "@/components/ui/button";
 
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -21,7 +21,7 @@ type Inputs = {
   password: string;
 };
 
-export default function SignIn() {
+export default function Login() {
   const router=useRouter();
   const {toast}=useToast();
   const[isLoading,setIsLoading]=useState(false);
@@ -32,16 +32,37 @@ export default function SignIn() {
     formState: { errors },
   } = useForm<Inputs>();
  
-  const onSubmit: SubmitHandler<Inputs> = async(data) => {
-    setIsLoading(true);
-    const result=await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`,data);
-    localStorage.setItem("token",result.data.token);
-    toast({title:"login successfully"})
-    setIsLoading(false);
-    reset();
-     if (result) router.push("/")
-
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    setIsLoading(true);  
+    try {
+      // API call to login
+      const result = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, data);
+      localStorage.setItem("token", result.data.token);
+      toast({ title: "Login successful!", description: "success" });
+      reset();
+      setIsLoading(false);
+      if (result) router.push("/");
+      
+    } catch (error:unknown ) {
+       if (error instanceof AxiosError){
+         if (error.response?.status === 400) {
+            toast({ title: error.message, description: "error" });
+          }  if (error.response?.status === 401) {
+            toast({ title: "User not found", description: "error" });
+          } else if (error.response?.status === 500) {
+            toast({ title: "Server error", description: "error" });
+          } 
+          else if (error.response?.status === 403) {
+            toast({ title: "password Incorrect", description: "error" });
+          }else {
+            toast({ title: "Something went wrong", description: "error" });
+          }
+       }
+        
+      setIsLoading(false);
+    }
   };
+  
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
@@ -94,13 +115,14 @@ export default function SignIn() {
               value="Submit"
             > {isLoading? "Loading...":"Log In"}</Button>
           </form>
+          <Link href='/auth/forgatepassword' className="text-blue-500 text-xs m-1">Forgate password</Link>
         </CardContent>
         
         <CardFooter className="flex flex-col items-center gap-2 mt-6">
           <hr className="w-full border-gray-300" />
           <div className="flex items-center gap-2">
               <p className="text-blue-500 text-xs">do not have account</p>
-              <Link href={"/signup"}  >signup</Link>
+              <Link href={"/auth/signup"}  >signup</Link>
           </div>
         </CardFooter>
       </Card>
