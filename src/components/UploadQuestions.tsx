@@ -52,7 +52,14 @@ export default function UploadPepper() {
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
       setIsLoading(true); // Show loading
-      console.log("before the form data", data);
+      if(data.bord==null || data.semester==null || data.year==null || selectedFiles.length===0) {
+        toast({title:"All field are required",description:"please select all fields",
+          popover:"auto",
+          
+        });
+    
+        return;
+      }
       const formData = new FormData();
       const token = localStorage.getItem("token");
       formData.append("subject", data.subject);
@@ -105,7 +112,7 @@ export default function UploadPepper() {
             <input
               id="subject"
               className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-              {...register("subject")}
+              {...register("subject", {required:true})}
             />
           </div>
           <div className="w-full">
@@ -115,7 +122,7 @@ export default function UploadPepper() {
             <input
               id="branch"
               className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-              {...register("branch")}
+              {...register("branch",{required:true})}
             />
           </div>
         </div>
@@ -123,6 +130,7 @@ export default function UploadPepper() {
         {/* Dropdowns for University, Semester, Year */}
         <div className="grid sm:grid-cols-3   gap-4">
           <ComboboxDemo
+             
             drop_down_list={universityData}
             default_value="Select University"
             onChange={(value) => setValue("bord", value)}
