@@ -1,5 +1,7 @@
 "use client"
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 export type Inputs = {
     bord: string;
     semester: string;
@@ -10,6 +12,7 @@ export type Inputs = {
     description?:string;
     branch?:string
     files?:File | null;
+    thumbnail?:File |  null | any; 
 
   };
 
