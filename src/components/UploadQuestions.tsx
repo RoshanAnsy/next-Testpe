@@ -42,6 +42,7 @@ export default function UploadPepper() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false); // For managing dialog state
   const [isLoading, setIsLoading] = useState(false); // Loading state
+  // const [thumbnail,setThumbnail] = useState('');
 
   // Receive files from DropZone
   const handleFileChange = (files: File[]) => {
@@ -50,6 +51,8 @@ export default function UploadPepper() {
   };
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    
+    // console.log("from data",data.thumbnail[0]);
     try {
       setIsLoading(true); // Show loading
       if(data.bord==null || data.semester==null || data.year==null || selectedFiles.length===0) {
@@ -69,12 +72,17 @@ export default function UploadPepper() {
       formData.append("year", data.year || "");
       formData.append("heading", data.heading || "");
       formData.append("description", data.description || " ");
+      
       formData.append("token", token || "");
       
       // Append multiple files to FormData
       selectedFiles.forEach((file) => {
         formData.append(`files`, file);
       });
+      // Append the thumbnail file
+      if (data.thumbnail && data.thumbnail.length > 0) {
+        formData.append("file", data.thumbnail[0]);
+      }
 
       // Upload API call
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/prev`, formData, {
@@ -85,12 +93,13 @@ export default function UploadPepper() {
       });
 
       toast({ title: "Pepper uploaded successfully" });
-      reset({files:null,subject:'',semester:'',branch:'',year:'',bord:'',heading:'',description:''}); // Reset form
-      setIsDialogOpen(false); // Close the dialog
+      reset({files:null,subject:'',semester:'',branch:'',year:'',bord:'',heading:'',description:'',thumbnail:''}); // Reset form
+      setIsDialogOpen(false); 
     } catch (error) {
-      console.error("Error during file upload:", error);
+      console.log(error);
+      toast({ title: "Pepper not uploaded ",description:"something is issue while uploading " });
     } finally {
-      setIsLoading(false); // Hide loading state
+      setIsLoading(false); 
     }
   };
 
@@ -163,9 +172,10 @@ export default function UploadPepper() {
         </div>
 
         {/* Description */}
+        
         <div>
-          <label htmlFor="description" className="block text-sm text-gray-700">
-            Description of Pepper
+        <label htmlFor="description" className="block text-sm text-gray-700">
+        Description of Pepper
           </label>
           <Textarea
             id="description"
@@ -175,8 +185,23 @@ export default function UploadPepper() {
           {errors.description && (
             <span className="text-red-600 text-sm">This field is required</span>
           )}
-        </div>
 
+        </div>
+        <div>
+          <label htmlFor="thumbnail" className="block text-sm text-gray-700">
+            Upload Thumbnail
+          </label>
+          <input
+            id="thumbnail"
+            type="file"
+            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+            {...register("thumbnail", { required: true })}
+            
+          />
+          {errors.thumbnail && (
+            <span className="text-red-600 text-sm">This field is required</span>
+          )}
+        </div>
         {/* File Upload */}
         <DropZone onFileChange={handleFileChange} />
 

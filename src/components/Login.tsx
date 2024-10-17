@@ -37,7 +37,11 @@ export default function Login() {
     try {
       // API call to login
       const result = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, data);
+      console.log("login details",result)
       localStorage.setItem("token", result.data.token);
+      localStorage.setItem("name", result.data.payload.name);
+      localStorage.setItem("email", result.data.payload.email);
+      localStorage.setItem("image", result.data.payload.image);
       toast({ title: "Login successful!", description: "success" });
       reset();
       setIsLoading(false);

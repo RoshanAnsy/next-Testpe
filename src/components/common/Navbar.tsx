@@ -95,7 +95,7 @@ export default function Navbar() {
                 <span className="sr-only">User profile</span>
               </Button></Link>
             ) : (
-              <Link href="/login">
+              <Link href="/auth/login">
                 <Button variant="ghost">Login</Button>
               </Link>
             )}
