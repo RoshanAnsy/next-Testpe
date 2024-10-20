@@ -31,5 +31,5 @@ export type Inputs = {
     year: string;
     semester: string;
     subject: string;
-    url: string[];
+    images: string[];
   }
