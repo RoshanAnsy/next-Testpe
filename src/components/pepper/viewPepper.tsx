@@ -14,9 +14,9 @@ const ViewPepper: React.FC<ViewPepperProps> = ({ question, onClose }) => {
   const [touchDistance, setTouchDistance] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isFullScreen, setIsFullScreen] = useState(false);
-
+    console.log("this is a full screen",question);
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    console.log("this is touchstart event",e);
+    console.log("this is touchstart event", e);
     if (e.touches.length === 2 && isFullScreen) {
       const distance = getDistance(e.touches as unknown as TouchList);
       setTouchDistance(distance);
@@ -24,7 +24,7 @@ const ViewPepper: React.FC<ViewPepperProps> = ({ question, onClose }) => {
   };
 
   const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    console.log("this is handleTouchMove data",e,touchDistance);
+    console.log("this is handleTouchMove data", e, touchDistance);
     if (e.touches.length === 2 && touchDistance && isFullScreen) {
       const newDistance = getDistance(e.touches as unknown as TouchList);
       const scaleFactor = newDistance / touchDistance;
@@ -44,15 +44,19 @@ const ViewPepper: React.FC<ViewPepperProps> = ({ question, onClose }) => {
   };
 
   const [currentIndex, setCurrentIndex] = useState(0);
- 
+
   const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % question?.url.length);
+    if (question?.images && question.images.length > 0) {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % question.images.length);
+    }
   };
 
   const handlePrevious = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? question?.url.length - 1 : prevIndex - 1
-    );
+    if (question?.images && question.images.length > 0) {
+      setCurrentIndex((prevIndex) =>
+        prevIndex === 0 ? question.images.length - 1 : prevIndex - 1
+      );
+    }
   };
 
   const handleFullScreen = () => {
@@ -86,16 +90,19 @@ const ViewPepper: React.FC<ViewPepperProps> = ({ question, onClose }) => {
       {!isFullScreen && (
         <button
           onClick={onClose}
-          className="absolute top-1 right-0 sm:top-2 sm:right-2 bg-black  sm:font-bold  text-white   px-2 rounded-full hover:bg-red-700">
+          className="absolute top-1 right-0 sm:top-2 sm:right-2 bg-black sm:font-bold text-white px-2 rounded-full hover:bg-red-700"
+        >
           X
         </button>
       )}
 
-      <h2 className={`text-sm sm:text-2xl font-semibold mb-4 uppercase ${isFullScreen ? 'hidden' : ''}`}> <span>subject:</span> {question?.subject}</h2>
+      <h2 className={`text-sm sm:text-2xl font-semibold mb-4 uppercase ${isFullScreen ? 'hidden' : ''}`}>
+        <span>Subject:</span> {question?.subject}
+      </h2>
       <div className={`grid grid-cols-2 gap-4 sm:text-lg text-sm ${isFullScreen ? 'hidden' : ''}`}>
         <div>
           <p><strong>Bord:</strong> {question?.bord}</p>
-          <p><strong>Year:</strong> {question.year}</p>
+          <p><strong>Year:</strong> {question?.year}</p>
         </div>
         <div>
           <p><strong>Semester:</strong> {question?.semester}</p>
@@ -104,50 +111,54 @@ const ViewPepper: React.FC<ViewPepperProps> = ({ question, onClose }) => {
       </div>
 
       {/* Image Section */}
-      <div className={`relative my-6 flex justify-center ${isFullScreen ? 'w-full h-screen bg-black' : ''} `}
-       ref={containerRef}
-       onTouchStart={isFullScreen ? handleTouchStart : undefined}
-       onTouchMove={isFullScreen ? handleTouchMove : undefined}
-       style={{
-         transform: isFullScreen ? `scale(${zoomLevel})` : 'scale(1)',
-         transition: 'transform 0.1s ease',
-       }}
+      <div
+        className={`relative my-6 flex justify-center ${isFullScreen ? 'w-full h-screen bg-black' : ''} `}
+        ref={containerRef}
+        onTouchStart={isFullScreen ? handleTouchStart : undefined}
+        onTouchMove={isFullScreen ? handleTouchMove : undefined}
+        style={{
+          transform: isFullScreen ? `scale(${zoomLevel})` : 'scale(1)',
+          transition: 'transform 0.1s ease',
+        }}
       >
-        <Image
-          id="currentImage"
-          
-          src={question?.url[currentIndex]}
-          alt={`Slide ${currentIndex + 1}`}
-          className={`max-w-full h-96 rounded-lg object-contain text-[10px] sm:text-sm font-time ${
-            isFullScreen ? 'h-full' : 'border'
-          } `}
-          layout="responsive"
-          width={16}  // aspect ratio width
-          height={9}  
-        />
-        {/* Previous Button */}
-        <button
-          onClick={handlePrevious}
-          className="absolute left-0 top-1/2 transform -translate-y-1/2 text-[10px] sm:text-sm font-time bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-700 "
-        >
-          Previous
-        </button>
-        {/* Next Button */}
-        <button
-          onClick={handleNext}
-          className="absolute right-0 top-1/2 transform -translate-y-1/2 text-[10px] px-6 sm:text-sm font-time bg-blue-500 text-white sm:px-4 py-2 rounded-full hover:bg-blue-700"
-        >
-          Next
-        </button>
+        {question?.images && question.images.length > 0 ? (
+          <>
+            <Image
+              // id="currentImage"
+              src={question.images[currentIndex]}
+              alt={`Slide ${currentIndex + 1}`}
+              className={`max-w-full h-96 rounded-lg object-contain text-[10px] sm:text-sm font-time ${isFullScreen ? 'h-full' : 'border'}`}
+              layout="responsive"
+              width={16}  // aspect ratio width
+              height={9}
+            />
+            {/* Previous Button */}
+            <button
+              onClick={handlePrevious}
+              className="absolute left-0 top-1/2 transform -translate-y-1/2 text-[10px] sm:text-sm font-time bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-700"
+            >
+              Previous
+            </button>
+            {/* Next Button */}
+            <button
+              onClick={handleNext}
+              className="absolute right-0 top-1/2 transform -translate-y-1/2 text-[10px] px-6 sm:text-sm font-time bg-blue-500 text-white sm:px-4 py-2 rounded-full hover:bg-blue-700"
+            >
+              Next
+            </button>
 
-        {/* Full Screen Exit Button (only in full screen mode) */}
-        {isFullScreen && (
-          <button
-            onClick={handleExitFullScreen}
-            className="absolute bottom-4 right-4 text-[10px] sm:text-sm font-time bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-700"
-          >
-            Exit Full Screen
-          </button>
+            {/* Full Screen Exit Button (only in full screen mode) */}
+            {isFullScreen && (
+              <button
+                onClick={handleExitFullScreen}
+                className="absolute bottom-4 right-4 text-[10px] sm:text-sm font-time bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-700"
+              >
+                Exit Full Screen
+              </button>
+            )}
+          </>
+        ) : (
+          <p>No images available</p>
         )}
       </div>
 

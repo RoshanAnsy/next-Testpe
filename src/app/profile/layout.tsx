@@ -73,7 +73,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
             <nav>
               <ul>
                 <li className="mb-4">
-                  <Link href="/profile" onClick={handleLinkClick} className="flex gap-2 justify-center items-center hover:shadow-sm rounded-md p-1 hover:bg-neutral-300">
+                  <Link href="/profile"  onClick={handleLinkClick} className="flex gap-2 justify-center items-center hover:shadow-sm rounded-md p-1 hover:bg-neutral-300">
                     <span><SlPeople /></span> Profile
                   </Link>
                 </li>

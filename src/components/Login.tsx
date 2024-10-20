@@ -16,6 +16,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
+// import useProfileStore from "@/store/profileStore";
+// import useAuthStore from "@/store/authStore";
+// import ProfileService from "@/app/profile/page";
+// import Header from "./Headers/Headers";
 type Inputs = {
   email: string;
   password: string;
@@ -24,6 +28,8 @@ type Inputs = {
 export default function Login() {
   const router=useRouter();
   const {toast}=useToast();
+  // const setAuthToken=useAuthStore((state)=>state.setAuthToken)
+  // const setProfile=useProfileStore((state)=>state.setProfileDetails)
   const[isLoading,setIsLoading]=useState(false);
   const {
     register,
@@ -133,3 +139,7 @@ export default function Login() {
     </div>
   );
 }
+
+
+
+
