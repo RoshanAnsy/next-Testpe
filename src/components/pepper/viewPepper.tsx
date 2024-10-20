@@ -124,7 +124,7 @@ const ViewPepper: React.FC<ViewPepperProps> = ({ question, onClose }) => {
         {question?.images && question.images.length > 0 ? (
           <>
             <Image
-              // id="currentImage"
+              id="currentImage"
               src={question.images[currentIndex]}
               alt={`Slide ${currentIndex + 1}`}
               className={`max-w-full h-96 rounded-lg object-contain text-[10px] sm:text-sm font-time ${isFullScreen ? 'h-full' : 'border'}`}
