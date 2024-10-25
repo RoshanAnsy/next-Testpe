@@ -1,5 +1,5 @@
 import { QuestionData } from "@/type/types";
-
+import semester from "../../../public/assects/semster.jpg"
 
 export const universityData = [
     { value: "beu", label: "BEU" },
@@ -26,8 +26,6 @@ export const universityData = [
   ];
   
   export const staticData: QuestionData[] = [
-    { heading: "4-th sem", description: "this is just random data", year: "2023", id: 1 },
-    { heading: "4-th sem", description: "this is just random data", year: "2023", id: 2 },
-    { heading: "4-th sem", description: "this is just random data", year: "2023", id: 3 },
-    { heading: "4-th sem", description: "this is just random data", year: "2023", id: 4 },
+    { heading: "5-th sem cse pepper", description: "this is just random data",thumbnail:semester, year: "2022", id: 1 },
+    { heading: "5-th sem cse pepper", description: "this is just random data",thumbnail:semester, year: "2022", id: 2 },
   ];

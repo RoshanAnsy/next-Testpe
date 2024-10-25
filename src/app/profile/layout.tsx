@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { BsBoxArrowInRight } from "react-icons/bs";
 import { IoToggleOutline } from "react-icons/io5"; // Mobile menu button icon
 import { useRouter } from "next/navigation";
+import { VscVerifiedFilled } from "react-icons/vsc";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -80,6 +81,11 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
                 <li className="mb-4">
                   <Link href="/profile/upload" onClick={handleLinkClick} className="flex gap-2 justify-center items-center hover:shadow-sm rounded-md p-1 hover:bg-neutral-300">
                     <span><PiUploadSimple /></span> Upload
+                  </Link>
+                </li>
+                <li className="mb-4">
+                  <Link href="/profile/verified" onClick={handleLinkClick} className="flex gap-2 justify-center items-center hover:shadow-sm rounded-md p-1 hover:bg-neutral-300">
+                    <span><VscVerifiedFilled /></span> v pepper
                   </Link>
                 </li>
                 <li className="mb-4">

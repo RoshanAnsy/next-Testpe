@@ -22,6 +22,7 @@ export type Inputs = {
     description: string;
     year: string;
     id: number;
+    thumbnail?: string | any;
     
   }
   
