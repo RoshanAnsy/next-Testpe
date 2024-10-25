@@ -18,13 +18,23 @@ interface ComboboxProps {
   drop_down_list: { value: string; label: string }[];
   default_value: string;
   emptyValue?: string;
-  onChange: (value: string) => void;  // New prop for handling changes
+  onChange: (value: string) => void;
+  selectedValue?: string;  // Add selectedValue to the interface
 }
 
 
-export function ComboboxDemo({ drop_down_list, default_value, emptyValue, onChange }: ComboboxProps) {
+
+export function ComboboxDemo({
+  drop_down_list,
+  default_value,
+  emptyValue,
+  onChange,
+  selectedValue,  // Destructure selectedValue from props
+}: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+  
+  // If selectedValue is passed, use it as the initial value, otherwise default to an empty string
+  const [value, setValue] = React.useState<string>(selectedValue as string); 
 
   const handleSelect = (selectedValue: string) => {
     setValue(selectedValue);
@@ -39,7 +49,7 @@ export function ComboboxDemo({ drop_down_list, default_value, emptyValue, onChan
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className=" w-auto text-[10px] sm:text-sm font-times sm:w-[200px] justify-between border-none"
+          className="w-auto text-[10px] sm:text-sm font-times sm:w-[200px] justify-between border-none"
         >
           {value
             ? drop_down_list.find((item) => item.value === value)?.label
@@ -55,8 +65,8 @@ export function ComboboxDemo({ drop_down_list, default_value, emptyValue, onChan
             <CommandGroup>
               {drop_down_list.map((item) => (
                 <CommandItem
-                key={item.value}
-                onSelect={() => handleSelect(item.value)} // Call handleSelect on selection
+                  key={item.value}
+                  onSelect={() => handleSelect(item.value)} // Call handleSelect on selection
                 >
                   <Check
                     className={cn(

@@ -25,7 +25,7 @@ import { yearData,universityData, semesterData  } from "./data/catched";
 import { Inputs } from "@/type/types";
 import { Textarea } from "./ui/textarea";
 import { DropZone } from "./ui/dropzone";
-import { useState } from "react";
+import {  useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 // import { useRouter } from "next/navigation"; // Next.js 13+ for client-side navigation
 
@@ -41,7 +41,12 @@ export default function UploadPepper() {
   // const router = useRouter(); // For showing loading
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false); // For managing dialog state
-  const [isLoading, setIsLoading] = useState(false); // Loading state
+  const [isLoading, setIsLoading] = useState(false);  // Loading state
+  const [comboboxValues, setComboboxValues] = useState({
+    bord: '',
+    semester: '',
+    year: ''
+  });
   // const [thumbnail,setThumbnail] = useState('');
 
   // Receive files from DropZone
@@ -49,13 +54,20 @@ export default function UploadPepper() {
     setSelectedFiles(files);
     console.log("Files received from DropZone:", files);
   };
-
+  // Receive combobox changes
+  const handleComboboxChange = (field: keyof Inputs, value: string) => {
+    setValue(field, value);  // Update the form value
+    setComboboxValues((prev) => ({
+      ...prev,
+      [field]: value as string,
+    }));
+  };
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     
     // console.log("from data",data.thumbnail[0]);
     try {
       setIsLoading(true); // Show loading
-      if(data.bord==null || data.semester==null || data.year==null || selectedFiles.length===0) {
+      if(!data.bord|| !data.semester || !data.year || selectedFiles.length===0) {
         toast({title:"All field are required",description:"please select all fields",
           popover:"auto",
           
@@ -65,15 +77,16 @@ export default function UploadPepper() {
       }
       const formData = new FormData();
       const token = localStorage.getItem("token");
+      console.log("data check",data.semester,data.year,data.bord)
       formData.append("subject", data.subject);
-      formData.append("branch", data.branch || "");
-      formData.append("bord", data.bord || "");
-      formData.append("semester", data.semester || "");
-      formData.append("year", data.year || "");
-      formData.append("heading", data.heading || "");
-      formData.append("description", data.description || " ");
+      formData.append("branch", data.branch as string );
+      formData.append("bord", data.bord as string );
+      formData.append("semester", data.semester );
+      formData.append("year", data.year  );
+      formData.append("heading", data.heading as string );
+      formData.append("description", data.description as string);
       
-      formData.append("token", token || "");
+      formData.append("token", token as string );
       
       // Append multiple files to FormData
       selectedFiles.forEach((file) => {
@@ -94,6 +107,15 @@ export default function UploadPepper() {
 
       toast({ title: "Pepper uploaded successfully" });
       reset({files:null,subject:'',semester:'',branch:'',year:'',bord:'',heading:'',description:'',thumbnail:''}); // Reset form
+      // Clear ComboboxDemo values
+      setComboboxValues({
+        bord: '',
+        semester: '',
+        year: '',
+      });
+      
+      // Clear selected files in DropZone
+      setSelectedFiles([]);
       setIsDialogOpen(false); 
     } catch (error) {
       console.log(error);
@@ -101,7 +123,10 @@ export default function UploadPepper() {
     } finally {
       setIsLoading(false); 
     }
+    
   };
+
+  
 
   return (
     <Card className="w-full p-6 rounded-lg shadow-none ">
@@ -138,21 +163,23 @@ export default function UploadPepper() {
 
         {/* Dropdowns for University, Semester, Year */}
         <div className="grid sm:grid-cols-3   gap-4">
-          <ComboboxDemo
-             
+        <ComboboxDemo
             drop_down_list={universityData}
             default_value="Select University"
-            onChange={(value) => setValue("bord", value)}
+            onChange={(value) => handleComboboxChange('bord', value)}
+            selectedValue={comboboxValues.bord}
           />
           <ComboboxDemo
-            default_value="Select Semester"
             drop_down_list={semesterData}
-            onChange={(value) => setValue("semester", value)}
+            default_value="Select Semester"
+            onChange={(value) => handleComboboxChange('semester', value)}
+            selectedValue={comboboxValues.semester}
           />
           <ComboboxDemo
             drop_down_list={yearData}
             default_value="Select Year"
-            onChange={(value) => setValue("year", value)}
+            onChange={(value) => handleComboboxChange('year', value)}
+            selectedValue={comboboxValues.year}
           />
         </div>
 
@@ -231,3 +258,9 @@ export default function UploadPepper() {
     </Card>
   );
 }
+
+
+
+
+
+
