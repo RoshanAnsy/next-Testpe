@@ -95,12 +95,13 @@ export const Search = () => {
       </div>
 
       {isModalOpen && selectedQuestion && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
-            <ViewPepper question={selectedQuestion} onClose={closeModal} />
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 ">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full border ">
+            <ViewPepper  question={selectedQuestion} onClose={closeModal} />
           </div>
         </div>
       )}
     </div>
+    
   );
 };

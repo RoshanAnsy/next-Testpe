@@ -85,93 +85,96 @@ const ViewPepper: React.FC<ViewPepperProps> = ({ question, onClose }) => {
   }, []);
 
   return (
-    <div className="relative max-w-2xl sm:mx-auto md:p-6 bg-white rounded-lg ">
-      {/* Close Button */}
-      {!isFullScreen && (
-        <button
-          onClick={onClose}
-          className="absolute top-1 right-0 sm:top-2 sm:right-2 bg-black sm:font-bold text-white px-2 rounded-full hover:bg-red-700"
-        >
-          X
-        </button>
-      )}
+    <div className="relative max-w-2xl sm:mx-auto sm:p-6 rounded-lg max-h-screen">
+  {/* Close Button */}
+  {!isFullScreen && (
+    <button
+      onClick={onClose}
+      className="absolute top-1 right-0 sm:top-2 sm:right-2 bg-black sm:font-bold text-white px-2 rounded-full hover:bg-red-700"
+    >
+      X
+    </button>
+  )}
 
-      <h2 className={`text-sm sm:text-2xl font-semibold mb-4 uppercase ${isFullScreen ? 'hidden' : ''}`}>
-        <span>Subject:</span> {question?.subject}
-      </h2>
-      <div className={`grid grid-cols-2 gap-4 sm:text-lg text-sm ${isFullScreen ? 'hidden' : ''}`}>
-        <div>
-          <p><strong>Bord:</strong> {question?.bord}</p>
-          <p><strong>Year:</strong> {question?.year}</p>
-        </div>
-        <div>
-          <p><strong>Semester:</strong> {question?.semester}</p>
-          <p><strong>Branch:</strong> {question?.branch}</p>
-        </div>
-      </div>
-
-      {/* Image Section */}
-      <div
-        className={`relative my-6 flex justify-center ${isFullScreen ? 'w-full h-screen bg-black' : ''} `}
-        ref={containerRef}
-        onTouchStart={isFullScreen ? handleTouchStart : undefined}
-        onTouchMove={isFullScreen ? handleTouchMove : undefined}
-        style={{
-          transform: isFullScreen ? `scale(${zoomLevel})` : 'scale(1)',
-          transition: 'transform 0.1s ease',
-        }}
-      >
-        {question?.images && question.images.length > 0 ? (
-          <>
-            <Image
-              id="currentImage"
-              src={question.images[currentIndex]}
-              alt={`Slide ${currentIndex + 1}`}
-              className={`max-w-full h-96 rounded-lg object-contain text-[10px] sm:text-sm font-time ${isFullScreen ? 'h-full' : 'border'}`}
-              layout="responsive"
-              width={16}  // aspect ratio width
-              height={9}
-            />
-            {/* Previous Button */}
-            <button
-              onClick={handlePrevious}
-              className="absolute left-0 top-1/2 transform -translate-y-1/2 text-[10px] sm:text-sm font-time bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-700"
-            >
-              Previous
-            </button>
-            {/* Next Button */}
-            <button
-              onClick={handleNext}
-              className="absolute right-0 top-1/2 transform -translate-y-1/2 text-[10px] px-6 sm:text-sm font-time bg-blue-500 text-white sm:px-4 py-2 rounded-full hover:bg-blue-700"
-            >
-              Next
-            </button>
-
-            {/* Full Screen Exit Button (only in full screen mode) */}
-            {isFullScreen && (
-              <button
-                onClick={handleExitFullScreen}
-                className="absolute bottom-4 right-4 text-[10px] sm:text-sm font-time bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-700"
-              >
-                Exit Full Screen
-              </button>
-            )}
-          </>
-        ) : (
-          <p>No images available</p>
-        )}
-      </div>
-
-      {/* Full Screen Button (shown only when not in full screen mode) */}
-      {!isFullScreen && (
-        <button
-          onClick={handleFullScreen}
-          className="absolute bottom-0 right-0 sm:right-4 text-[10px] sm:text-sm font-time bg-blue-500 text-white py-2 px-2 sm:px-4 sm:py-2 rounded hover:bg-blue-700"
-        >
-          Full Screen
-        </button>
-      )}
+  <h2 className={`text-sm sm:text-lg  mb-4 uppercase ${isFullScreen ? 'hidden' : ''}`}>
+    <span className='font-semibold '>Subject:</span> {question?.subject}
+  </h2>
+  <div className={`grid grid-cols-2 uppercase gap-4 text-sm ${isFullScreen ? 'hidden' : ''}`}>
+    <div>
+      <p><strong>Board:</strong> {question?.bord}</p>
+      <p><strong>Year:</strong> {question?.year}</p>
     </div>
+    <div>
+      <p><strong>Semester:</strong> {question?.semester}</p>
+      <p><strong>Branch:</strong> {question?.branch}</p>
+    </div>
+  </div>
+
+  {/* Image Section */}
+  <div
+    className={`relative my-6 flex justify-center ${isFullScreen ? 'w-full h-screen bg-black' : ''}`}
+    ref={containerRef}
+    onTouchStart={isFullScreen ? handleTouchStart : undefined}
+    onTouchMove={isFullScreen ? handleTouchMove : undefined}
+    style={{
+      transform: isFullScreen ? `scale(${zoomLevel})` : 'scale(1)',
+      transition: 'transform 0.1s ease',
+    }}
+  >
+    {question?.images && question.images.length > 0 ? (
+      <>
+        <Image
+          id="currentImage"
+          src={question.images[currentIndex]}
+          alt={`Slide ${currentIndex + 1}`}
+          className={`max-w-full max-h-72 rounded-lg object-contain ${isFullScreen ? 'h-full w-auto' : 'border'}`}
+          layout="responsive"
+          width={16}
+          height={9}
+        />
+        
+        {/* Previous Button */}
+        <button
+          onClick={handlePrevious}
+          className="absolute left-0 top-1/2 transform -translate-y-1/2 text-[10px] sm:text-sm font-time bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-700"
+        >
+          Previous
+        </button>
+
+        {/* Next Button */}
+        <button
+          onClick={handleNext}
+          className="absolute right-0 top-1/2 transform -translate-y-1/2 text-[10px] px-6 sm:text-sm font-time bg-blue-500 text-white sm:px-4 py-2 rounded-full hover:bg-blue-700"
+        >
+          Next
+        </button>
+
+        {/* Full Screen Exit Button (only in full screen mode) */}
+        {isFullScreen && (
+          <button
+            onClick={handleExitFullScreen}
+            className="absolute bottom-4 right-4 text-[10px] sm:text-sm font-time bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-700"
+          >
+            Exit Full Screen
+          </button>
+        )}
+      </>
+    ) : (
+      <p>No images available</p>
+    )}
+  </div>
+
+  {/* Full Screen Button (shown only when not in full screen mode) */}
+  {!isFullScreen && (
+    <button
+      onClick={handleFullScreen}
+      className="absolute bottom-0 right-0 sm:right-4 text-[10px] sm:text-sm font-time bg-blue-500 text-white py-2 px-2 sm:px-4 sm:py-2 rounded hover:bg-blue-700"
+    >
+      Full Screen
+    </button>
+  )}
+</div>
+
   );
 };
 
