@@ -4,7 +4,9 @@ import axios from "axios";
 import { Button } from "./ui/button";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-
+import React, { useRef } from 'react'
+import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
+import { useToast } from "@/hooks/use-toast";
 interface PepperData {
   heading: string;
   description: string;
@@ -14,15 +16,21 @@ interface PepperData {
 
 const VerifiedPepper: React.FC = () => {
   const [data, setData] = useState<PepperData[]>([]);
-
+  const ref = useRef<LoadingBarRef>(null);
+  const {toast}=useToast();
   const GetPepper = async () => {
     try {
       const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
       if (token) {
+        if(ref.current)  ref.current.continuousStart()
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/verifyPepper?token=${token}`
         );
-        if (response?.data?.result) setData(response.data.result);
+        if (response?.data?.result){
+          if(ref.current)  ref.current.complete()
+            setData(response.data.result);
+          toast({title:`${data.length==0 ? "No any pepper verify yet" : "All these are verified by testpe"}`})
+        } 
       }
     } catch (error) {
       console.error("Error fetching pepper data:", error);
@@ -37,6 +45,10 @@ const VerifiedPepper: React.FC = () => {
 
     <div className=" flex flex-col justify-center items-center">
         <h1 className="text-sm sm:text-xl font-bold mb-4 bg-neutral-200 p-2 rounded-sm">Verified pepper</h1>
+        <LoadingBar color='#063970'
+        waitingTime={1000} 
+        height={4}
+         ref={ref} />
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
       {data?.map((item, index) => (
