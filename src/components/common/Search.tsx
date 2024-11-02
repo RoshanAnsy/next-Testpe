@@ -14,20 +14,24 @@ import { yearData,universityData,semesterData } from "../data/catched";
 import { ViewQuestion } from "@/type/types";
 import { QuestionData } from "@/type/types";
 import { staticData } from "../data/catched";
+import LoadingBar, { LoadingBarRef } from 'react-top-loading-bar';
 
-
+import React, { useRef } from 'react'
 export const Search = () => {
   const [question_data, set_data] = useState<QuestionData[]>(staticData);
   const [selectedQuestion, setSelectedQuestion] = useState<ViewQuestion | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {toast}=useToast();
   const[isLoading,setIsLoading]=useState(false)
+  const ref = useRef<LoadingBarRef>(null);
   const { register, handleSubmit, setValue, formState: { errors } } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     setIsLoading(true);
+    if(ref.current)  ref.current.continuousStart()
     const url: string = `${process.env.NEXT_PUBLIC_API_URL}/`;
     const result = await axios.post(url, data);
+    if(ref.current)  ref.current.complete();
     set_data(result.data);
     window.scrollTo({ top: 300, behavior: 'smooth' });
     toast({title:`${result?.data.length>0 ? "you search is matched" : "Related to your search nothing found"}`})
@@ -37,10 +41,13 @@ export const Search = () => {
  
 
   const handleCardClick = async (value: number) => {
+    if(ref.current)  ref.current.continuousStart()
     const result = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/viewpepper?pepperId=${value}`);
+    if(ref.current)  ref.current.complete();
     console.log("after the click on card", result);
     setSelectedQuestion(result.data);
     setIsModalOpen(true);
+    
   };
 
   const closeModal = () => {
@@ -50,6 +57,10 @@ export const Search = () => {
 
   return (
     <div className="flex flex-col justify-center items-center w-full p-2 md:p-4 lg:p-6">
+        <LoadingBar color='#063970'
+        waitingTime={1000} 
+        height={4}
+         ref={ref} />
        <div className="w-full max-w-6xl ">
         <form
           onSubmit={handleSubmit(onSubmit)}
