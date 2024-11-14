@@ -39,6 +39,7 @@ const VerifiedPepper: React.FC = () => {
 
   useEffect(() => {
     GetPepper();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
