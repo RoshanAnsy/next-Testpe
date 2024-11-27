@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   },
   twitter:{
     site: "testpe.in",
-    images: "https://res.cloudinary.com/dxgkczwho/image/upload/v1728748195/TP_1_robav7.png",
+    images: "https://res.cloudinary.com/dxgkczwho/image/upload/v1732715525/homed_yihpte.png",
     title: "Testpe.in",
     description: "Testpe is private company that provides previous year questions pepper of various university and collage.",
     card:"summary_large_image",
